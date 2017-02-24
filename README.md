@@ -19,10 +19,13 @@ my_difficult_password
 
 
 ## Usage
+See `fu -h`.
+tl;dr:
 ```
 fu filename
 ```
-if the file is an Jupyter notebook the returned url will be in [nbviewer.jupyter.org](http://nbviewer.jupyter.org)`.
+
+If the file is an Jupyter notebook the returned url will be in [nbviewer.jupyter.org](http://nbviewer.jupyter.org).
 
 
 ## Limitations
