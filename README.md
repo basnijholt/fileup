@@ -9,7 +9,7 @@ pip install -U https://github.com/basnijholt/fileup/archive/master.zip
 
 
 ## Preperations
-Create a config file at ~/.config/fileup/config with the following information and structure:
+Create a config file at `~/.config/fileup/config` with the following information and structure:
 ```
 example.com
 file_up_folder
