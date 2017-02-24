@@ -6,6 +6,7 @@ import base64
 import datetime
 import ftplib
 import os
+import re
 import subprocess
 import tempfile
 
@@ -18,15 +19,17 @@ parser.add_argument('-i', '--img', action='store_true')
 args = parser.parse_args()
 
 
-def slugify(value):
+def get_valid_filename(s):
     """
-    Normalizes string, converts to lowercase, removes non-alpha characters,
-    and converts spaces to hyphens.
+    Return the given string converted to a string that can be used for a clean
+    filename. Remove leading and trailing spaces; convert other spaces to
+    underscores; and remove anything that is not an alphanumeric, dash,
+    underscore, or dot.
+    >>> get_valid_filename("john's portrait in 2004.jpg")
+    'johns_portrait_in_2004.jpg'
     """
-    import unicodedata
-    value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
-    value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
-    value = unicode(re.sub('[-\s]+', '-', value))
+    s = s.strip().replace(' ', '_')
+    return re.sub(r'(?u)[^-\w.]', '', s)
 
 
 fname = os.path.abspath(os.path.expanduser(args.fname))
@@ -56,6 +59,7 @@ file_dates = [f.rsplit('_delete_on_', 1) for f in files]
 for file_name, date in file_dates:
     rm_date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
     if rm_date < today:
+        print('removing "{}" because the date passed'.format(file_name))
         try:
             ftp.delete(file_name)
         except:
@@ -65,7 +69,7 @@ for file_name, date in file_dates:
 
 
 # Fix the filename to avoid filename character issues
-fname_base = slugify(fname_base)
+fname_base = get_valid_filename(fname_base)
 
 
 # Delete first if file already exists, it could happen that there is already
