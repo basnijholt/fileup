@@ -1,5 +1,5 @@
 # fileup
-Easily upload and share files using your command-line interface.
+Easily upload and share files using your command-line interface. You can specify a time limit after which the file it removed.
 
 
 ## Installation
