@@ -113,9 +113,12 @@ def main():
         url = 'http://nbviewer.jupyter.org/url/' + url + '?flush_cache=true'
 
 
-    # Put a URL into clipboard
-    process = subprocess.Popen('pbcopy', env={'LANG': 'en_US.UTF-8'},
-                               stdin=subprocess.PIPE)
+    # Put a URL into clipboard only works on OS X
+    try:
+        process = subprocess.Popen('pbcopy', env={'LANG': 'en_US.UTF-8'},
+                                   stdin=subprocess.PIPE)
+    except:
+        pass
 
     process.communicate(url.encode('utf-8'))
     print('Your url is: ', url)
