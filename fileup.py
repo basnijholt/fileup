@@ -117,10 +117,10 @@ def main():
     try:
         process = subprocess.Popen('pbcopy', env={'LANG': 'en_US.UTF-8'},
                                    stdin=subprocess.PIPE)
+        process.communicate(url.encode('utf-8'))
     except:
         pass
 
-    process.communicate(url.encode('utf-8'))
     print('Your url is: ', url)
 
 if __name__ == "__main__":
