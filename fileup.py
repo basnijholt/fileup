@@ -69,7 +69,7 @@ def main():
 
     # Connect to server
     ftp = ftplib.FTP(base_url, user, pw)
-    ftp.cwd('/public_html/' + folder)
+    ftp.cwd(folder)
 
 
     # Fix the filename to avoid filename character issues
