@@ -34,8 +34,8 @@ def read_config():
             my_user_name
             my_difficult_password
         """
-        base_url, folder, user, pw = [s.replace('\n', '') for s in f.readlines()]
-    return base_url, folder, user, pw
+        base_url, base_folder, folder, user, pw = [s.replace('\n', '') for s in f.readlines()]
+    return base_url, base_folder, folder, user, pw
 
 
 def remove_old_files(ftp, today):
@@ -55,7 +55,16 @@ def remove_old_files(ftp, today):
 
 def main():
     # Get arguments
-    parser = argparse.ArgumentParser(description='Publish a file.')
+    description = ["Publish a file. \n \n",
+                   "Create a config file at ~/.config/fileup/config with the following information and structure:\n",
+                   "example.com",
+                   "base_folder"
+                   "file_up_folder",
+                   "my_user_name",
+                   "my_difficult_password"]
+
+    parser = argparse.ArgumentParser(description='\n'.join(description),
+                                     formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('fname', type=str)
     parser.add_argument('-t', '--time', type=int, default=90)
     parser.add_argument('-d', '--direct', action='store_true')
@@ -65,11 +74,11 @@ def main():
 
     fname_base = os.path.basename(fname)
 
-    base_url, folder, user, pw = read_config()
+    base_url, base_folder, folder, user, pw = read_config()
 
     # Connect to server
     ftp = ftplib.FTP(base_url, user, pw)
-    ftp.cwd(folder)
+    ftp.cwd(os.path.join(base_folder, folder))
 
 
     # Fix the filename to avoid filename character issues

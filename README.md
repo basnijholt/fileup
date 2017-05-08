@@ -11,8 +11,9 @@ pip install -U https://github.com/basnijholt/fileup/archive/master.zip
 ## Preperations
 Create a config file at `~/.config/fileup/config` with the following information and structure:
 ```
-example.com
-file_up_folder
+base_url (example: nijholt.biz)
+base_folder (example: /domains/nijholt.biz/public_html/)
+file_up_folder (example: 'stuff', if fileup needs to put the files in nijholt.biz/stuff)
 my_user_name
 my_difficult_password
 ```
