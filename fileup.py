@@ -59,7 +59,7 @@ def main():
     description = ["Publish a file. \n \n",
                    "Create a config file at ~/.config/fileup/config with the following information and structure:\n",
                    "example.com",
-                   "base_folder"
+                   "base_folder",
                    "file_up_folder",
                    "my_user_name",
                    "my_difficult_password"]
