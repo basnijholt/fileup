@@ -100,7 +100,7 @@ def main():
             print('upload ' + fname_date)
             ftp.storbinary('STOR {0}'.format(fname_date), f)
 
-    # Upload and open the actuall file
+    # Upload and open the actual file
     with open(fname, 'rb') as f:
         ftp.storbinary('STOR {0}'.format(fname_base), f)
         print('upload ' + fname_base)
