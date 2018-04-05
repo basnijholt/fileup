@@ -107,7 +107,10 @@ def main():
         ftp.quit()
 
     # Create URL
-    url = '{}/{}/{}'.format(base_url, folder, fname_base)
+    if folder:
+        url = '{}/{}/{}'.format(base_url, folder, fname_base)
+    else:
+        url = '{}/{}'.format(base_url, fname_base)
 
     if args.direct:
         # Returns the url as is.
@@ -126,7 +129,7 @@ def main():
     except:
         pass
 
-    print('Your url is: ', url)
+    print('Your url is: ', 'http://' + url)
 
 if __name__ == "__main__":
     main()
