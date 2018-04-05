@@ -67,7 +67,8 @@ def main():
     parser = argparse.ArgumentParser(description='\n'.join(description),
                                      formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('fname', type=str)
-    parser.add_argument('-t', '--time', type=int, default=90)
+    parser.add_argument('-t', '--time', type=int, default=90, 
+        help='If time is 0 the file will never be deleted, default is 90 days.')
     parser.add_argument('-d', '--direct', action='store_true')
     parser.add_argument('-i', '--img', action='store_true')
     args = parser.parse_args()
