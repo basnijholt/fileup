@@ -121,6 +121,8 @@ def main():
     elif fname.endswith('.ipynb'):
         # Return the url in the nbviewer
         url = 'http://nbviewer.jupyter.org/url/' + url + '?flush_cache=true'
+    else:
+        url = 'http://' + url
 
     # Put a URL into clipboard only works on OS X
     try:
@@ -130,7 +132,7 @@ def main():
     except:
         pass
 
-    print('Your url is: ', 'http://' + url)
+    print('Your url is: ', url)
 
 if __name__ == "__main__":
     main()
