@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="fileup",
-    version="0.2.1",
+    version="0.2.2",
     description="Easily upload files to an FTP-server and get back the url.",
     url="https://github.com/basnijholt/fileup",
     author="Bas Nijholt",
