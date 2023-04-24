@@ -1,78 +1,133 @@
-#!/usr/bin/env python
-# -*-Python-*-
+"""fileup - Effortless File Sharing for Command-Line Enthusiasts.
+
+This module provides a command-line tool for easily sharing files.
+"""
+from __future__ import annotations
 
 import argparse
 import contextlib
 import datetime
 import ftplib
-import os
 import re
 import subprocess
 import tempfile
+from pathlib import Path
 
 
-def get_valid_filename(s):
-    """
+def get_valid_filename(s: str) -> str:
+    """Normalize string to make it a valid filename.
+
     Return the given string converted to a string that can be used for a clean
     filename. Remove leading and trailing spaces; convert other spaces to
     underscores; and remove anything that is not an alphanumeric, dash,
     underscore, or dot.
     >>> get_valid_filename("john's portrait in 2004.jpg")
-    'johns_portrait_in_2004.jpg'
+    'johns_portrait_in_2004.jpg'.
     """
     s = s.strip().replace(" ", "_")
     return re.sub(r"(?u)[^-\w.]", "", s)
 
 
-def read_config():
-    # Read the config
-    with open(os.path.expanduser("~/.config/fileup/config")) as f:
-        """Create a config file at ~/.config/fileup/config with the
-        following information and structure:
-            example.com
-            file_up_folder
-            my_user_name
-            my_difficult_password
-        """
-        base_url, base_folder, folder, user, pw = [
-            s.replace("\n", "") for s in f.readlines()
-        ]
+def read_config() -> tuple[str, str, str, str, str]:
+    """Read the config."""
+    config_path = Path("~/.config/fileup/config").expanduser()
+    with config_path.open() as f:
+        base_url, base_folder, folder, user, pw = (s.strip() for s in f.readlines())
     return base_url, base_folder, folder, user, pw
 
 
-def remove_old_files(ftp, today):
-    # Remove all files that are past the limit
+def remove_old_files(ftp: ftplib.FTP, today: datetime.date) -> None:
+    """Remove all files that are past the limit."""
     files = [f for f in ftp.nlst() if "_delete_on_" in f]
     file_dates = [f.rsplit("_delete_on_", 1) for f in files]
     for file_name, date in file_dates:
-        rm_date = datetime.datetime.strptime(date, "%Y-%m-%d").date()
+        rm_date = (
+            datetime.datetime.strptime(date, "%Y-%m-%d")
+            .replace(tzinfo=datetime.timezone.utc)
+            .date()
+        )
         if rm_date < today:
             print(f'removing "{file_name}" because the date passed')
             try:
                 ftp.delete(file_name)
-            except Exception:
-                # File didn't exist anymore for some reason...
-                pass
+            except Exception as e:  # noqa: BLE001
+                print(f"Error: {e}")
             ftp.delete(file_name + "_delete_on_" + date)
 
 
-def main():
-    # Get arguments
-    description = [
-        "Publish a file. \n \n",
-        "Create a config file at ~/.config/fileup/config with the following information and structure:\n",
-        "example.com",
-        "base_folder",
-        "file_up_folder",
-        "my_user_name",
-        "my_difficult_password",
-    ]
+def file_up(filename: str | Path, *, time: float, direct: bool, img: bool) -> str:
+    """Upload a file to a server and return the url."""
+    path = Path(filename).resolve()
+    filename_base = path.name
 
+    base_url, base_folder, folder, user, pw = read_config()
+
+    # Connect to server
+    ftp = ftplib.FTP(base_url, user, pw)  # noqa: S321
+    ftp.cwd(str(Path(base_folder) / folder))
+
+    # Fix the filename to avoid filename character issues
+    filename_base = get_valid_filename(filename_base)
+
+    today = datetime.datetime.now(datetime.timezone.utc).date()
+    remove_old_files(ftp, today)
+    # Delete first if file already exists, it could happen that there is
+    # already a file with a specified deletion date, these should be removed.
+    for f in ftp.nlst():
+        if f.startswith(filename_base) and "_delete_on_" in f:
+            ftp.delete(f)
+
+    if time != 0:  # could be negative, meaning it should be deleted now
+        remove_on = today + datetime.timedelta(days=time)
+        filename_date = filename_base + "_delete_on_" + str(remove_on)
+        with tempfile.TemporaryFile() as tmp_file:
+            print("upload " + filename_date)
+            ftp.storbinary(f"STOR {filename_date}", tmp_file)
+
+    # Upload and open the actual file
+    with path.open("rb") as file:
+        ftp.storbinary(f"STOR {filename_base}", file)
+        print("upload " + filename_base)
+        ftp.quit()
+
+    # Create URL
+    url = (
+        f"{base_url}/{folder}/{filename_base}"
+        if folder
+        else f"{base_url}/{filename_base}"
+    )
+
+    if direct:
+        # Returns the url as is.
+        url = "http://" + url
+    elif img:
+        url = f"![](http://{url})"
+    elif path.suffix == ".ipynb":
+        # Return the url in the nbviewer
+        url = "http://nbviewer.jupyter.org/url/" + url + "?flush_cache=true"
+    else:
+        url = "http://" + url
+    return url
+
+
+DESCRIPTION = [
+    "Publish a file. \n \n",
+    "Create a config file at ~/.config/fileup/config with the following information and structure:\n",
+    "example.com",
+    "base_folder",
+    "file_up_folder",
+    "my_user_name",
+    "my_difficult_password",
+]
+
+
+def main() -> None:
+    """Main function."""
     parser = argparse.ArgumentParser(
-        description="\n".join(description),
+        description="\n".join(DESCRIPTION),
         formatter_class=argparse.RawTextHelpFormatter,
     )
-    parser.add_argument("fname", type=str)
+    parser.add_argument("filename", type=str)
     parser.add_argument(
         "-t",
         "--time",
@@ -83,62 +138,15 @@ def main():
     parser.add_argument("-d", "--direct", action="store_true")
     parser.add_argument("-i", "--img", action="store_true")
     args = parser.parse_args()
-    fname = os.path.abspath(os.path.expanduser(args.fname))
 
-    fname_base = os.path.basename(fname)
-
-    base_url, base_folder, folder, user, pw = read_config()
-
-    # Connect to server
-    ftp = ftplib.FTP(base_url, user, pw)
-    ftp.cwd(os.path.join(base_folder, folder))
-
-    # Fix the filename to avoid filename character issues
-    fname_base = get_valid_filename(fname_base)
-
-    today = datetime.datetime.now().date()
-    remove_old_files(ftp, today)
-
-    # Delete first if file already exists, it could happen that there is
-    # already a file with a specified deletion date, these should be removed.
-    for f in ftp.nlst():
-        if f.startswith(fname_base) and "_delete_on_" in f:
-            ftp.delete(f)
-
-    if args.time != 0:  # could be negative (used for debugging).
-        remove_on = today + datetime.timedelta(days=args.time)
-        fname_date = fname_base + "_delete_on_" + str(remove_on)
-        with tempfile.TemporaryFile() as f:
-            print("upload " + fname_date)
-            ftp.storbinary(f"STOR {fname_date}", f)
-
-    # Upload and open the actual file
-    with open(fname, "rb") as f:
-        ftp.storbinary(f"STOR {fname_base}", f)
-        print("upload " + fname_base)
-        ftp.quit()
-
-    # Create URL
-    if folder:
-        url = f"{base_url}/{folder}/{fname_base}"
-    else:
-        url = f"{base_url}/{fname_base}"
-
-    if args.direct:
-        # Returns the url as is.
-        url = "http://" + url
-    elif args.img:
-        url = f"![](http://{url})"
-    elif fname.endswith(".ipynb"):
-        # Return the url in the nbviewer
-        url = "http://nbviewer.jupyter.org/url/" + url + "?flush_cache=true"
-    else:
-        url = "http://" + url
+    url = file_up(args.filename, time=args.time, direct=args.direct, img=args.img)
 
     # Put a URL into clipboard only works on OS X
     with contextlib.suppress(Exception):
         process = subprocess.Popen(
-            "pbcopy", env={"LANG": "en_US.UTF-8"}, stdin=subprocess.PIPE
+            "pbcopy",
+            env={"LANG": "en_US.UTF-8"},
+            stdin=subprocess.PIPE,
         )
         process.communicate(url.encode("utf-8"))
 
