@@ -1,6 +1,11 @@
 
 # :rocket: fileup - Effortless File Sharing for Command-Line Enthusiasts :rocket:
 
+[![PyPI](https://img.shields.io/pypi/v/fileup.svg)](https://pypi.python.org/pypi/fileup)
+[![Build Status](https://github.com/basnijholt/fileup/actions/workflows/pytest.yml/badge.svg)](https://github.com/basnijholt/fileup/actions/workflows/pytest.yml)
+[![CodeCov](https://codecov.io/gh/basnijholt/fileup/branch/main/graph/badge.svg)](https://codecov.io/gh/basnijholt/fileup)
+
+
 `fileup` is your go-to Python package for hassle-free uploading and sharing of files right from your command-line interface! 🖥️🔥 You can set a time limit after which the file will be automatically removed, ensuring the security of your data. 🕒🔒
 
 ## :books: Table of Contents
@@ -22,7 +27,7 @@
 To install `fileup`, simply run the following command:
 
 ```bash
-pip install -U https://github.com/basnijholt/fileup/archive/master.zip
+pip install -U fileup
 ```
 
 ## :memo: Configuration
