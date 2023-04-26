@@ -85,7 +85,7 @@ def mock_fileup(mocker: pytest_mock.plugin.MockerFixture) -> ModuleType:
 
 
 def test_file_up(mocker: pytest_mock.plugin.MockerFixture, tmp_path: Path) -> None:
-    """Test the file_up function."""
+    """Test the fileup function."""
     # Mock the necessary functions
     mocker.patch(
         "fileup.read_config",
@@ -102,13 +102,13 @@ def test_file_up(mocker: pytest_mock.plugin.MockerFixture, tmp_path: Path) -> No
     filename = tmp_path / "test_file.txt"
     filename.write_text("test")
     # Call the function
-    url = fileup.file_up(filename, time=90, direct=False, img=False)
+    url = fileup.fileup(filename, time=90, direct=False, img=False)
     assert url.startswith("http://example.com/file_up_folder/test_file.txt")
 
-    url = fileup.file_up(filename, time=90, direct=True, img=False)
+    url = fileup.fileup(filename, time=90, direct=True, img=False)
     assert url.startswith("http://example.com/file_up_folder/test_file.txt")
 
-    url = fileup.file_up(filename, time=90, direct=False, img=True)
+    url = fileup.fileup(filename, time=90, direct=False, img=True)
     assert url.startswith("![](http://example.com/file_up_folder/test_file.txt)")
 
 
@@ -122,7 +122,7 @@ def test_main(
     test_args = ["test_file.txt", "-t", "90"]
     monkeypatch.setattr("sys.argv", ["fileup", *test_args])
     mocker.patch(
-        "fileup.file_up",
+        "fileup.fileup",
         return_value="http://example.com/file_up_folder/mocked_file_name",
     )
     mock_fileup.main()
