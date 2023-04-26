@@ -55,7 +55,13 @@ def remove_old_files(ftp: ftplib.FTP, today: datetime.date) -> None:
             ftp.delete(file_name + "_delete_on_" + date)
 
 
-def file_up(filename: str | Path, *, time: float, direct: bool, img: bool) -> str:
+def fileup(
+    filename: str | Path,
+    *,
+    time: float = 90.0,
+    direct: bool = False,
+    img: bool = False,
+) -> str:
     """Upload a file to a server and return the url."""
     path = Path(filename).resolve()
     filename_base = path.name
@@ -139,7 +145,7 @@ def main() -> None:
     parser.add_argument("-i", "--img", action="store_true")
     args = parser.parse_args()
 
-    url = file_up(args.filename, time=args.time, direct=args.direct, img=args.img)
+    url = fileup(args.filename, time=args.time, direct=args.direct, img=args.img)
 
     # Put a URL into clipboard only works on OS X
     with contextlib.suppress(Exception):
