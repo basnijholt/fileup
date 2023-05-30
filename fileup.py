@@ -117,7 +117,7 @@ def fileup(
 
 
 DESCRIPTION = [
-    "Publish a file. \n \n",
+    "Publish a file.\n\n",
     "Create a config file at ~/.config/fileup/config with the following information and structure:\n",
     "example.com",
     "base_folder",
@@ -150,7 +150,7 @@ def main() -> None:
     # Put a URL into clipboard only works on OS X
     with contextlib.suppress(Exception):
         process = subprocess.Popen(
-            "pbcopy",
+            "pbcopy",  # noqa: S603, S607
             env={"LANG": "en_US.UTF-8"},
             stdin=subprocess.PIPE,
         )
