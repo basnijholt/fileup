@@ -117,7 +117,7 @@ def fileup(
 
 
 DESCRIPTION = [
-    "Publish a file. \n \n",
+    "Publish a file.\n\n",
     "Create a config file at ~/.config/fileup/config with the following information and structure:\n",
     "example.com",
     "base_folder",
