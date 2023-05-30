@@ -68,7 +68,6 @@ usage: fu [-h] [-t TIME] [-d] [-i] filename
 
 Publish a file.
 
-
 Create a config file at ~/.config/fileup/config with the following information and structure:
 
 example.com
