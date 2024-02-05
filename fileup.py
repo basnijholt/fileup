@@ -2,6 +2,7 @@
 
 This module provides a command-line tool for easily sharing files.
 """
+
 from __future__ import annotations
 
 import argparse
