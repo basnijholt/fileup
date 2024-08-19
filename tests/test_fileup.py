@@ -64,7 +64,7 @@ def test_remove_old_files() -> None:
     assert len(ftp.files) == 0
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_fileup(mocker: pytest_mock.plugin.MockerFixture) -> ModuleType:
     """Mock the fileup module."""
     mocker.patch(
