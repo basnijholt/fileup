@@ -35,11 +35,23 @@ pip install -U fileup
 Before you can start sharing your files, you'll need to create a configuration file at `~/.config/fileup/config` with the following structure:
 
 ```less
-base_url (example: nijholt.biz)
-base_folder (example: /domains/nijholt.biz/public_html/)
-file_up_folder (example: 'stuff', if fileup needs to put the files in nijholt.biz/stuff)
-my_user_name
-my_difficult_password
+# ~/.config/fileup/config.ini
+[default]
+protocol = ftp  # or scp
+hostname = example.com  # or the Host from your ~/.ssh/config
+base_folder = /domains/example.com/public_html/
+file_up_folder = stuff
+
+[ftp]
+username = my_user_name
+password = my_difficult_password
+
+[scp]
+# If empty, will use your SSH config
+username =
+# If using SSH config, no need for these
+private_key =
+password =
 ```
 
 ## :video_game: Usage
