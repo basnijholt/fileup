@@ -14,7 +14,10 @@ You can set a time limit after which the file will be automatically removed, ens
 
 - [:package: Installation](#package-installation)
 - [:memo: Configuration](#memo-configuration)
+  - [FTP Configuration](#ftp-configuration)
+  - [SCP Configuration](#scp-configuration)
 - [:video_game: Usage](#video_game-usage)
+  - [Special Features](#special-features)
 - [:green_apple: macOS Integration](#green_apple-macos-integration)
 - [:warning: Limitations](#warning-limitations)
 
