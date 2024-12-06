@@ -12,14 +12,16 @@ You can set a time limit after which the file will be automatically removed, ens
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [:package: Installation](#package-installation)
-- [:memo: Configuration](#memo-configuration)
-  - [FTP Configuration](#ftp-configuration)
-  - [SCP Configuration](#scp-configuration)
-- [:video_game: Usage](#video_game-usage)
-  - [Special Features](#special-features)
-- [:green_apple: macOS Integration](#green_apple-macos-integration)
-- [:warning: Limitations](#warning-limitations)
+  - [:package: Installation](#package-installation)
+  - [:memo: Configuration](#memo-configuration)
+    - [FTP Configuration](#ftp-configuration)
+    - [SCP Configuration](#scp-configuration)
+  - [:video_game: Usage](#video_game-usage)
+- [If empty, will use your SSH config](#if-empty-will-use-your-ssh-config)
+- [If using SSH config, no need for these](#if-using-ssh-config-no-need-for-these)
+    - [Special Features](#special-features)
+  - [:green_apple: macOS Integration](#green_apple-macos-integration)
+  - [:warning: Limitations](#warning-limitations)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
