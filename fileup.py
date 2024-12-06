@@ -276,7 +276,7 @@ def fileup(
             remove_on = today + datetime.timedelta(days=time)
             filename_date = filename_base + "_delete_on_" + str(remove_on)
             # Create empty marker file for deletion date
-            with tempfile.TemporaryFile() as tmp_file:
+            with tempfile.NamedTemporaryFile() as tmp_file:
                 print("upload " + filename_date)
                 uploader.upload_file(Path(tmp_file.name), filename_date)
 
@@ -307,12 +307,20 @@ def fileup(
 
 DESCRIPTION = [
     "Publish a file.\n\n",
-    "Create a config file at ~/.config/fileup/config with the following information and structure:\n",
-    "example.com",
-    "base_folder",
-    "file_up_folder",
-    "my_user_name",
-    "my_difficult_password",
+    "Create a config file at ~/.config/fileup/config.ini with the following structure:\n",
+    "[default]",
+    "protocol = ftp  # or scp",
+    "hostname = example.com",
+    "base_folder = /base/folder",
+    "file_up_folder = stuff",
+    "",
+    "[ftp]",
+    "username = my_user_name",
+    "password = my_difficult_password",
+    "",
+    "[scp]",
+    "username = scp_user  # optional, uses SSH config if not specified",
+    "private_key = ~/.ssh/id_rsa  # optional",
 ]
 
 

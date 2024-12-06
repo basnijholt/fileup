@@ -256,3 +256,28 @@ def test_main(
     assert (
         captured.out.strip() == "Your url is: http://example.com/stuff/mocked_file_name"
     )
+
+
+def test_zero_time_no_deletion(
+    mocker: pytest_mock.plugin.MockerFixture,
+    tmp_path: Path,
+    mock_config: FileupConfig,
+    mock_temp_file: MagicMock,  # noqa: ARG001
+) -> None:
+    """Test that time=0 means no deletion marker."""
+    mocker.patch("fileup.read_config", return_value=mock_config)
+    mock_ftp = MagicMock()
+    mock_ftp.nlst.return_value = []
+    mocker.patch("ftplib.FTP", return_value=mock_ftp)
+
+    filename = tmp_path / "test_file.txt"
+    filename.write_text("test")
+    fileup.fileup(filename, time=0)
+
+    # Verify no deletion marker was created
+    delete_marker = [
+        call[0][0]
+        for call in mock_ftp.storbinary.call_args_list
+        if "_delete_on_" in str(call)
+    ]
+    assert len(delete_marker) == 0
