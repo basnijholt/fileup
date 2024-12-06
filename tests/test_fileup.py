@@ -55,7 +55,7 @@ private_key = ~/.ssh/id_rsa
     assert result.base_folder == "/base/folder"
     assert result.file_up_folder == "stuff"
     assert result.username == "user"
-    assert result.password == "pass"
+    assert result.password == "pass"  # noqa: S105
 
 
 def test_read_config_scp(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
@@ -106,7 +106,11 @@ class MockUploader(fileup.FileUploader):
         """Initialize with test data."""
         self.files = ["file_delete_on_2000-01-01"]
 
-    def upload_file(self, local_path: Path, remote_filename: str) -> None:
+    def upload_file(
+        self,
+        local_path: Path,  # noqa: ARG002
+        remote_filename: str,
+    ) -> None:
         """Mock upload."""
         self.files.append(remote_filename)
 
@@ -136,7 +140,7 @@ def mock_config() -> FileupConfig:
         base_folder="/base/folder",
         file_up_folder="stuff",
         username="user",
-        password="pass",
+        password="pass",  # noqa: S106
     )
 
 
@@ -183,7 +187,7 @@ def test_file_up_ftp(
     mocker: pytest_mock.plugin.MockerFixture,
     tmp_path: Path,
     mock_config: FileupConfig,
-    mock_temp_file: MagicMock,
+    mock_temp_file: MagicMock,  # noqa: ARG001
 ) -> None:
     """Test the fileup function with FTP."""
     mocker.patch("fileup.read_config", return_value=mock_config)
@@ -197,6 +201,10 @@ def test_file_up_ftp(
     url = fileup.fileup(filename, time=90, direct=False, img=False)
     assert url == "http://example.com/stuff/test_file.txt"
 
+    # Verify FTP operations
+    mock_ftp.storbinary.assert_called()
+
+    # Test other URL formats
     url = fileup.fileup(filename, time=90, direct=True, img=False)
     assert url == "http://example.com/stuff/test_file.txt"
 
@@ -208,7 +216,7 @@ def test_file_up_scp(
     mocker: pytest_mock.plugin.MockerFixture,
     tmp_path: Path,
     mock_config: FileupConfig,
-    mock_temp_file: MagicMock,
+    mock_temp_file: MagicMock,  # noqa: ARG001
 ) -> None:
     """Test the fileup function with SCP."""
     mock_config.protocol = "scp"
@@ -221,7 +229,13 @@ def test_file_up_scp(
 
     url = fileup.fileup(filename, time=90, direct=False, img=False)
     assert url == "http://example.com/stuff/test_file.txt"
-    mock_run.assert_called()  # verify subprocess.run was called
+
+    # Verify SCP operations
+    assert mock_run.call_count >= 1
+
+    # Test direct URL
+    url = fileup.fileup(filename, time=90, direct=True, img=False)
+    assert url == "http://example.com/stuff/test_file.txt"
 
 
 def test_main(

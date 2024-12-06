@@ -11,6 +11,7 @@ import configparser
 import contextlib
 import datetime
 import ftplib
+import io
 import re
 import subprocess
 import tempfile
@@ -37,7 +38,7 @@ class FileUploader(abc.ABC):
     def delete_file(self, filename: str) -> None:
         """Delete a file from the remote server."""
 
-    def cleanup(self) -> None:
+    def cleanup(self) -> None:  # noqa: B027
         """Cleanup resources."""
 
 
@@ -51,7 +52,7 @@ class FTPUploader(FileUploader):
             msg = "FTP requires username and password"
             raise ValueError(msg)
 
-        self.ftp = ftplib.FTP(
+        self.ftp = ftplib.FTP(  # noqa: S321
             config.hostname,
             config.username,
             config.password,
@@ -60,8 +61,12 @@ class FTPUploader(FileUploader):
 
     def upload_file(self, local_path: Path, remote_filename: str) -> None:
         """Upload a file using FTP."""
-        with local_path.open("rb") as file:
-            self.ftp.storbinary(f"STOR {remote_filename}", file)
+        if not local_path.exists():
+            # For marker files, create an empty file
+            self.ftp.storbinary(f"STOR {remote_filename}", io.BytesIO())
+        else:
+            with local_path.open("rb") as file:
+                self.ftp.storbinary(f"STOR {remote_filename}", file)
 
     def list_files(self) -> list[str]:
         """List files using FTP."""
@@ -120,7 +125,7 @@ class SCPUploader(FileUploader):
 
         cmd.extend([host_str, f"ls -1 {remote_path}"])
 
-        result = subprocess.run(
+        result = subprocess.run(  # noqa: S603
             cmd,
             check=True,
             capture_output=True,
@@ -333,7 +338,7 @@ def main() -> None:
 
     # Put a URL into clipboard only works on OS X
     with contextlib.suppress(Exception):
-        process = subprocess.Popen(
+        process = subprocess.Popen(  # noqa: S603
             "pbcopy",  # noqa: S607
             env={"LANG": "en_US.UTF-8"},
             stdin=subprocess.PIPE,
