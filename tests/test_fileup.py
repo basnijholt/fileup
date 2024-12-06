@@ -35,6 +35,7 @@ protocol = ftp
 hostname = example.com
 base_folder = /base/folder
 file_up_folder = stuff
+url = files.example.com
 
 [ftp]
 username = user
@@ -54,6 +55,7 @@ private_key = ~/.ssh/id_rsa
     assert result.hostname == "example.com"
     assert result.base_folder == "/base/folder"
     assert result.file_up_folder == "stuff"
+    assert result.url == "files.example.com"
     assert result.username == "user"
     assert result.password == "pass"  # noqa: S105
 
@@ -66,6 +68,7 @@ protocol = scp
 hostname = example.com
 base_folder = /base/folder
 file_up_folder = stuff
+url = files.example.com
 
 [scp]
 username = scp_user
@@ -78,6 +81,7 @@ private_key = ~/.ssh/id_rsa
     result = fileup.read_config()
     assert isinstance(result, FileupConfig)
     assert result.protocol == "scp"
+    assert result.url == "files.example.com"
     assert result.username == "scp_user"
     assert result.private_key == "~/.ssh/id_rsa"
 
@@ -90,6 +94,7 @@ protocol = invalid
 hostname = example.com
 base_folder = /base/folder
 file_up_folder = stuff
+url = files.example.com
 """
     config_file = tmp_path / "config.ini"
     config_file.write_text(config_content)
@@ -139,6 +144,7 @@ def mock_config() -> FileupConfig:
         hostname="example.com",
         base_folder="/base/folder",
         file_up_folder="stuff",
+        url="files.example.com",
         username="user",
         password="pass",  # noqa: S106
     )
@@ -199,17 +205,17 @@ def test_file_up_ftp(
     filename.write_text("test")
 
     url = fileup.fileup(filename, time=90, direct=False, img=False)
-    assert url == "http://example.com/stuff/test_file.txt"
+    assert url == "http://files.example.com/stuff/test_file.txt"
 
     # Verify FTP operations
     mock_ftp.storbinary.assert_called()
 
     # Test other URL formats
     url = fileup.fileup(filename, time=90, direct=True, img=False)
-    assert url == "http://example.com/stuff/test_file.txt"
+    assert url == "http://files.example.com/stuff/test_file.txt"
 
     url = fileup.fileup(filename, time=90, direct=False, img=True)
-    assert url == "![](http://example.com/stuff/test_file.txt)"
+    assert url == "![](http://files.example.com/stuff/test_file.txt)"
 
 
 def test_file_up_scp(
@@ -228,14 +234,14 @@ def test_file_up_scp(
     filename.write_text("test")
 
     url = fileup.fileup(filename, time=90, direct=False, img=False)
-    assert url == "http://example.com/stuff/test_file.txt"
+    assert url == "http://files.example.com/stuff/test_file.txt"
 
     # Verify SCP operations
     assert mock_run.call_count >= 1
 
     # Test direct URL
     url = fileup.fileup(filename, time=90, direct=True, img=False)
-    assert url == "http://example.com/stuff/test_file.txt"
+    assert url == "http://files.example.com/stuff/test_file.txt"
 
 
 def test_main(
@@ -249,12 +255,13 @@ def test_main(
     monkeypatch.setattr("sys.argv", ["fileup", *test_args])
     mocker.patch(
         "fileup.fileup",
-        return_value="http://example.com/stuff/mocked_file_name",
+        return_value="http://files.example.com/stuff/mocked_file_name",
     )
     mock_fileup.main()
     captured = capsys.readouterr()
     assert (
-        captured.out.strip() == "Your url is: http://example.com/stuff/mocked_file_name"
+        captured.out.strip()
+        == "Your url is: http://files.example.com/stuff/mocked_file_name"
     )
 
 
