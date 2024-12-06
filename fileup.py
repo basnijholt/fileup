@@ -307,6 +307,7 @@ def fileup(
 DESCRIPTION = [
     "Publish a file.\n\n",
     "Create a config file at ~/.config/fileup/config.ini with the following structure:\n",
+    "```",
     "[default]",
     "protocol = ftp  # or scp",
     "hostname = example.com  # or the Host from your ~/.ssh/config",
@@ -324,6 +325,7 @@ DESCRIPTION = [
     "# If using SSH config, no need for these",
     "private_key = ",
     "password = ",
+    "```",
 ]
 
 
