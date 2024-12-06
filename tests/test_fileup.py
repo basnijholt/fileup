@@ -6,7 +6,7 @@ import datetime
 import io
 from pathlib import Path
 from typing import TYPE_CHECKING
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -288,3 +288,130 @@ def test_zero_time_no_deletion(
         if "_delete_on_" in str(call)
     ]
     assert len(delete_marker) == 0
+
+
+def test_ftp_uploader_invalid_config() -> None:
+    """Test FTPUploader with invalid config."""
+    config = FileupConfig(
+        protocol="ftp",
+        hostname="example.com",
+        base_folder="/base",
+        file_up_folder="files",
+        url="example.com",
+    )
+    with pytest.raises(ValueError, match="FTP requires username and password"):
+        fileup.FTPUploader(config)
+
+
+def test_ftp_uploader_file_not_exists(mock_config: FileupConfig) -> None:
+    """Test FTPUploader with non-existent file."""
+    mock_ftp = MagicMock()
+    with patch("ftplib.FTP", return_value=mock_ftp):
+        uploader = fileup.FTPUploader(mock_config)
+        uploader.upload_file(Path("nonexistent.txt"), "remote.txt")
+        mock_ftp.storbinary.assert_called_once()
+
+
+def test_fileup_ipynb(
+    mocker: pytest_mock.plugin.MockerFixture,
+    tmp_path: Path,
+    mock_config: FileupConfig,
+) -> None:
+    """Test fileup with Jupyter notebook."""
+    mocker.patch("fileup.read_config", return_value=mock_config)
+    mock_ftp = MagicMock()
+    mock_ftp.nlst.return_value = []
+    mocker.patch("ftplib.FTP", return_value=mock_ftp)
+
+    filename = tmp_path / "test.ipynb"
+    filename.write_text("{}")
+
+    url = fileup.fileup(filename, time=90)
+    assert "nbviewer.jupyter.org" in url
+
+
+def test_main_clipboard_error(
+    mock_fileup: MagicMock,  # noqa: ARG001
+    mocker: pytest_mock.plugin.MockerFixture,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture,
+) -> None:
+    """Test main function when clipboard operation fails."""
+    test_args = ["test_file.txt"]
+    monkeypatch.setattr("sys.argv", ["fileup", *test_args])
+    mocker.patch(
+        "fileup.fileup",
+        return_value="http://example.com/file",
+    )
+    # Make subprocess.Popen raise an exception
+    mocker.patch("subprocess.Popen", side_effect=Exception("Clipboard error"))
+
+    # Should not raise exception
+    fileup.main()
+    captured = capsys.readouterr()
+    assert "Your url is:" in captured.out
+
+
+def test_unsupported_protocol(
+    mocker: pytest_mock.plugin.MockerFixture,
+    mock_config: FileupConfig,
+) -> None:
+    """Test fileup with unsupported protocol."""
+    mock_config.protocol = "unsupported"
+    mocker.patch("fileup.read_config", return_value=mock_config)
+
+    with pytest.raises(ValueError, match="Unsupported protocol: unsupported"):
+        fileup.fileup("test.txt")
+
+
+def test_scp_uploader_with_username(mock_config: FileupConfig) -> None:
+    """Test SCPUploader with username."""
+    mock_config.protocol = "scp"
+    mock_config.username = "test_user"
+    mock_run = MagicMock()
+    with patch("subprocess.run", mock_run):
+        uploader = fileup.SCPUploader(mock_config)
+        uploader.upload_file(Path("test.txt"), "remote.txt")
+
+        # Check if username was used in command
+        cmd = mock_run.call_args[0][0]
+        assert "test_user@example.com" in cmd[-1]
+
+
+def test_scp_uploader_with_private_key(mock_config: FileupConfig) -> None:
+    """Test SCPUploader with private key."""
+    mock_config.protocol = "scp"
+    mock_config.private_key = "~/.ssh/id_rsa"
+    mock_run = MagicMock()
+    with patch("subprocess.run", mock_run):
+        uploader = fileup.SCPUploader(mock_config)
+        uploader.upload_file(Path("test.txt"), "remote.txt")
+
+        # Check if private key was used in command
+        cmd = mock_run.call_args[0][0]
+        assert "-i" in cmd
+        assert "~/.ssh/id_rsa" in cmd
+
+
+def test_main_with_all_options(
+    mocker: pytest_mock.plugin.MockerFixture,
+    monkeypatch: pytest.MonkeyPatch,
+    caps: pytest.CaptureFixture,  # noqa: ARG001
+) -> None:
+    """Test main function with all command line options."""
+    test_args = ["test_file.txt", "-t", "30", "-d", "-i"]
+    monkeypatch.setattr("sys.argv", ["fileup", *test_args])
+    mock_fileup = mocker.patch(
+        "fileup.fileup",
+        return_value="http://example.com/file",
+    )
+
+    fileup.main()
+
+    # Verify fileup was called with all options
+    mock_fileup.assert_called_once_with(
+        "test_file.txt",
+        time=30,
+        direct=True,
+        img=True,
+    )
