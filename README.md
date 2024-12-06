@@ -46,6 +46,11 @@ To install `fileup`, simply run the following command:
 ```bash
 pip install -U fileup
 ```
+or use `uv` or `pipx`:
+```bash
+uv tool install fileup
+pipx install fileup
+```
 
 ## :memo: Configuration
 
