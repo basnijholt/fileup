@@ -7,6 +7,9 @@
 `fileup` is your go-to Python package for hassle-free uploading and sharing of files right from your command-line interface! 🖥️
 You can set a time limit after which the file will be automatically removed, ensuring the security of your data. 🕒
 
+> [!TIP]
+> Just call `fu myfile.txt` to upload it and get the URL in your clipboard!
+
 ## :books: Table of Contents
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
