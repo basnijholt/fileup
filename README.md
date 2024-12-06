@@ -94,6 +94,7 @@ Publish a file.
 
 Create a config file at ~/.config/fileup/config.ini with the following structure:
 
+```
 [default]
 protocol = ftp  # or scp
 hostname = example.com  # or the Host from your ~/.ssh/config
@@ -107,10 +108,11 @@ password = my_difficult_password
 
 [scp]
 # If empty, will use your SSH config
-username =
+username = 
 # If using SSH config, no need for these
-private_key =
-password =
+private_key = 
+password = 
+```
 
 positional arguments:
   filename
