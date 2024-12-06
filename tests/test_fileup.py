@@ -396,7 +396,7 @@ def test_scp_uploader_with_private_key(mock_config: FileupConfig) -> None:
 def test_main_with_all_options(
     mocker: pytest_mock.plugin.MockerFixture,
     monkeypatch: pytest.MonkeyPatch,
-    caps: pytest.CaptureFixture,  # noqa: ARG001
+    capsys: pytest.CaptureFixture,  # noqa: ARG001
 ) -> None:
     """Test main function with all command line options."""
     test_args = ["test_file.txt", "-t", "30", "-d", "-i"]
