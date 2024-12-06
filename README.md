@@ -23,6 +23,15 @@ You can set a time limit after which the file will be automatically removed, ens
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## ✨ Features
+
+- 📤 Upload via FTP or SCP (using SSH config)
+- ⏰ Automatic file expiration and cleanup
+- 🔗 Smart URLs: Jupyter notebooks → nbviewer, image markdown, direct links
+- 📋 Automatic clipboard copy (macOS)
+- ⚡ Simple config using `~/.config/fileup/config.ini`
+- 🔐 Supports SSH keys and password authentication
+
 ## :package: Installation
 
 To install `fileup`, simply run the following command:
