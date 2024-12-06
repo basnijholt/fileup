@@ -175,9 +175,10 @@ class FileupConfig:
     """Configuration for fileup."""
 
     protocol: str
-    hostname: str
+    hostname: str  # SSH hostname or FTP server
     base_folder: str
     file_up_folder: str  # This is what we use in the URL
+    url: str  # The actual URL where files will be accessible
     username: str | None = None
     password: str | None = None
     private_key: str | None = None
@@ -187,18 +188,14 @@ def read_config() -> FileupConfig:
     """Read the config file."""
     config = configparser.ConfigParser()
     config_path = Path("~/.config/fileup/config.ini").expanduser()
-
     if not config_path.exists():
         msg = (
             f"Config file not found at {config_path}. "
             "Please create one following the documentation."
         )
-        raise FileNotFoundError(
-            msg,
-        )
+        raise FileNotFoundError(msg)
 
     config.read(config_path)
-
     protocol = config["default"]["protocol"]
     if protocol not in {"ftp", "scp"}:
         msg = f"Invalid protocol: {protocol}"
@@ -208,12 +205,14 @@ def read_config() -> FileupConfig:
     username = config.get(protocol, "username", fallback=None)
     password = config.get(protocol, "password", fallback=None)
     private_key = config.get(protocol, "private_key", fallback=None)
+    url = config.get("default", "url", fallback=config["default"]["hostname"])
 
     return FileupConfig(
         protocol=protocol,
         hostname=config["default"]["hostname"],
         base_folder=config["default"]["base_folder"],
         file_up_folder=config["default"]["file_up_folder"],
+        url=url,
         username=username,
         password=password,
         private_key=private_key,
@@ -286,9 +285,9 @@ def fileup(
 
         # Create URL using file_up_folder instead of folder
         url = (
-            f"{config.hostname}/{config.file_up_folder}/{filename_base}"
+            f"{config.url}/{config.file_up_folder}/{filename_base}"
             if config.file_up_folder
-            else f"{config.hostname}/{filename_base}"
+            else f"{config.url}/{filename_base}"
         )
 
         if direct:
