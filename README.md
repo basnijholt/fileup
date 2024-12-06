@@ -40,8 +40,9 @@ Before you can start sharing your files, you'll need to create a configuration f
 [default]
 protocol = ftp  # or scp
 hostname = example.com  # or the Host from your ~/.ssh/config
-base_folder = /domains/example.com/public_html/
-file_up_folder = stuff  # files will be accessible at example.com/stuff/
+base_folder = /path/to/files  # where files are stored on the server
+file_up_folder =  # subdirectory in URL, can be empty
+url = files.example.com  # the actual URL where files are accessible
 
 [ftp]
 username = my_user_name
@@ -53,6 +54,7 @@ username =
 # If using SSH config, no need for these
 private_key =
 password =
+
 ```
 
 ### FTP Configuration
@@ -105,10 +107,10 @@ password = my_difficult_password
 
 [scp]
 # If empty, will use your SSH config
-username = 
+username =
 # If using SSH config, no need for these
-private_key = 
-password = 
+private_key =
+password =
 
 positional arguments:
   filename
