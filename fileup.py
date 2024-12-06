@@ -210,8 +210,8 @@ def read_config() -> FileupConfig:
     return FileupConfig(
         protocol=protocol,
         hostname=config["default"]["hostname"],
-        base_folder=config["default"]["base_folder"],
-        file_up_folder=config["default"]["file_up_folder"],
+        base_folder=config["default"].get("base_folder", ""),
+        file_up_folder=config["default"].get("file_up_folder", ""),
         url=url,
         username=username,
         password=password,
