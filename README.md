@@ -107,10 +107,10 @@ password = my_difficult_password
 
 [scp]
 # If empty, will use your SSH config
-username = 
+username =
 # If using SSH config, no need for these
-private_key = 
-password = 
+private_key =
+password =
 
 positional arguments:
   filename
