@@ -137,8 +137,8 @@ positional arguments:
   filename
 
 options:
-  -h, --help            show this help message and exit
-  -t TIME, --time TIME  If time is 0 the file will never be deleted, default is 90 days.
+  -h, --help       show this help message and exit
+  -t, --time TIME  If time is 0 the file will never be deleted, default is 90 days.
   -d, --direct
   -i, --img
 ```
