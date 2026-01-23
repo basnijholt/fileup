@@ -1,4 +1,4 @@
-# :rocket: fileup - Effortless File Sharing for Command-Line Enthusiasts :rocket:
+# fileup - Effortless File Sharing for Command-Line Enthusiasts
 
 [![PyPI](https://img.shields.io/pypi/v/fileup.svg)](https://pypi.python.org/pypi/fileup)
 [![Build Status](https://github.com/basnijholt/fileup/actions/workflows/pytest.yml/badge.svg)](https://github.com/basnijholt/fileup/actions/workflows/pytest.yml)
@@ -6,30 +6,30 @@
 
 <img src="https://raw.githubusercontent.com/basnijholt/fileup/main/.github/logo.svg" alt="fileup Logo" align="right" style="width: 150px;" />
 
-`fileup` is your go-to Python package for hassle-free uploading and sharing of files right from your command-line interface! 🖥️
-You can set a time limit after which the file will be automatically removed, ensuring the security of your data. 🕒
+`fileup` is your go-to Python package for hassle-free uploading and sharing of files right from your command-line interface.
+You can set a time limit after which the file will be automatically removed, ensuring the security of your data.
 
 > [!TIP]
 > Just call `fu myfile.txt` to upload it and get the URL in your clipboard!
 
-## :books: Table of Contents
+## Table of Contents
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [✨ Features](#-features)
-- [:package: Installation](#package-installation)
-- [:memo: Configuration](#memo-configuration)
+- [Features](#features)
+- [Installation](#installation)
+- [Configuration](#configuration)
   - [FTP Configuration](#ftp-configuration)
   - [SCP Configuration](#scp-configuration)
-- [:video_game: Usage](#video_game-usage)
+- [Usage](#usage)
   - [Special Features](#special-features)
-- [:green_apple: macOS Integration](#green_apple-macos-integration)
-- [:warning: Limitations](#warning-limitations)
+- [macOS Integration](#macos-integration)
+- [Limitations](#limitations)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## ✨ Features
+## Features
 
 - 📤 Upload via FTP or SCP (using SSH config)
 - ⏰ Automatic file expiration and cleanup
@@ -41,7 +41,7 @@ You can set a time limit after which the file will be automatically removed, ens
 - 📜 Works as a single script or installed package
 - 🐍 Supports Python ≥3.10
 
-## :package: Installation
+## Installation
 
 To install `fileup`, simply run the following command:
 
@@ -54,7 +54,7 @@ uv tool install fileup
 pipx install fileup
 ```
 
-## :memo: Configuration
+## Configuration
 
 Before you can start sharing your files, you'll need to create a configuration file at `~/.config/fileup/config.ini` with the following structure:
 
@@ -88,7 +88,7 @@ For SCP uploads, you have two options:
 1. Use your SSH config by setting `protocol = scp` and using a hostname from your `~/.ssh/config`
 2. Explicitly configure SCP by providing `username` and optionally `private_key` in the `[scp]` section
 
-## :video_game: Usage
+## Usage
 
 For a list of available commands, type `fu -h`.
 
@@ -153,11 +153,11 @@ options:
 - **Automatic Deletion**: Files with expiration times are automatically removed when their time is up
 - **URL Copying**: On macOS, the URL is automatically copied to your clipboard
 
-## :green_apple: macOS Integration
+## macOS Integration
 
-`fileup` currently supports the `pbcopy` command, so the URL will be automatically copied to your clipboard on macOS systems. 📋✨
+`fileup` currently supports the `pbcopy` command, so the URL will be automatically copied to your clipboard on macOS systems.
 
-## :warning: Limitations
+## Limitations
 
 - The automatic clipboard copying feature is only available for macOS users
 - FTP passwords are stored in plain text; use with caution
@@ -165,4 +165,4 @@ options:
 
 * * *
 
-Give `fileup` a try today and experience the convenience of effortless file sharing right from your command-line! 🎉
+Give `fileup` a try today and experience the convenience of effortless file sharing right from your command-line!
