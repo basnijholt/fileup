@@ -39,7 +39,7 @@ You can set a time limit after which the file will be automatically removed, ens
 - 🔐 Supports SSH keys and password authentication
 - 🪶 Zero dependencies - uses Python standard library
 - 📜 Works as a single script or installed package
-- 🐍 Supports Python ≥3.7
+- 🐍 Supports Python ≥3.10
 
 ## :package: Installation
 

@@ -8,7 +8,7 @@ description = "Easily upload files to an FTP-server and get back the url."
 dynamic = ["version"]
 authors = [{ name = "Bas Nijholt", email = "bas@nijho.lt" }]
 dependencies = []
-requires-python = ">=3.7"
+requires-python = ">=3.10"
 
 [project.readme]
 file = "README.md"
@@ -49,7 +49,7 @@ line_length = 88
 
 [tool.ruff]
 line-length = 150
-target-version = "py37"
+target-version = "py310"
 select = ["ALL"]
 ignore = [
     "T20",     # flake8-print
@@ -72,7 +72,7 @@ ignore = [
 max-complexity = 18
 
 [tool.mypy]
-python_version = "3.7"
+python_version = "3.10"
 
 [tool.ruff.pep8-naming]
 # Allow Pydantic's `@validator` decorator to trigger class method treatment.
