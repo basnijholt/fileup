@@ -17,7 +17,7 @@ You can set a time limit after which the file will be automatically removed, ens
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [✨ Features](#-features)
+- [Features](#features)
 - [Installation](#installation)
 - [Configuration](#configuration)
   - [FTP Configuration](#ftp-configuration)
