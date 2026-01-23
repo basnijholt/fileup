@@ -13,9 +13,17 @@ readme = "README.md"
 
 [project.urls]
 Homepage = "https://github.com/basnijholt/fileup"
+Documentation = "https://fileup.nijho.lt"
 
 [project.optional-dependencies]
 test = ["pytest", "pre-commit", "coverage", "pytest-cov", "pytest-mock"]
+
+[dependency-groups]
+docs = [
+    "zensical",
+    "markdown-gfm-admonition",
+    "markdown-code-runner",
+]
 
 [project.scripts]
 fu = "fileup:main"

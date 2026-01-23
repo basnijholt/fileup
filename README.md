@@ -3,7 +3,9 @@
 [![PyPI](https://img.shields.io/pypi/v/fileup.svg)](https://pypi.python.org/pypi/fileup)
 [![Build Status](https://github.com/basnijholt/fileup/actions/workflows/pytest.yml/badge.svg)](https://github.com/basnijholt/fileup/actions/workflows/pytest.yml)
 [![CodeCov](https://codecov.io/gh/basnijholt/fileup/branch/main/graph/badge.svg)](https://codecov.io/gh/basnijholt/fileup)
+[![Documentation](https://img.shields.io/badge/docs-fileup.nijho.lt-blue)](https://fileup.nijho.lt)
 
+<!-- SECTION:intro:START -->
 <img src="https://raw.githubusercontent.com/basnijholt/fileup/main/.github/logo.svg" alt="fileup Logo" align="right" style="width: 150px;" />
 
 `fileup` is your go-to Python package for hassle-free uploading and sharing of files right from your command-line interface.
@@ -11,6 +13,7 @@ You can set a time limit after which the file will be automatically removed, ens
 
 > [!TIP]
 > Just call `fu myfile.txt` to upload it and get the URL in your clipboard!
+<!-- SECTION:intro:END -->
 
 ## Table of Contents
 
@@ -29,18 +32,34 @@ You can set a time limit after which the file will be automatically removed, ens
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+<!-- SECTION:features:START -->
 ## Features
 
-- 📤 Upload via FTP or SCP (using SSH config)
-- ⏰ Automatic file expiration and cleanup
-- 🔗 Smart URLs: Jupyter notebooks → nbviewer, image markdown, direct links
-- 📋 Automatic clipboard copy (macOS)
-- ⚡ Simple config using `~/.config/fileup/config.ini`
-- 🔐 Supports SSH keys and password authentication
-- 🪶 Zero dependencies - uses Python standard library
-- 📜 Works as a single script or installed package
-- 🐍 Supports Python ≥3.10
+- :outbox_tray: Upload via FTP or SCP (using SSH config)
+- :alarm_clock: Automatic file expiration and cleanup
+- :link: Smart URLs: Jupyter notebooks -> nbviewer, image markdown, direct links
+- :clipboard: Automatic clipboard copy (macOS)
+- :zap: Simple config using `~/.config/fileup/config.ini`
+- :closed_lock_with_key: Supports SSH keys and password authentication
+- :feather: Zero dependencies - uses Python standard library
+- :scroll: Works as a single script or installed package
+- :snake: Supports Python >=3.10
+<!-- SECTION:features:END -->
 
+<!-- SECTION:why:START -->
+## Why fileup?
+
+I frequently need to share files quickly with colleagues or friends. Whether it's a screenshot, a code snippet, or a Jupyter notebook, I wanted a tool that:
+
+1. Works from the command line with minimal typing
+2. Automatically copies the URL to my clipboard
+3. Supports automatic expiration for temporary files
+4. Requires no external dependencies
+
+`fileup` was born out of this need - a simple, focused tool that does one thing well.
+<!-- SECTION:why:END -->
+
+<!-- SECTION:installation:START -->
 ## Installation
 
 To install `fileup`, simply run the following command:
@@ -53,7 +72,9 @@ or use `uv` or `pipx`:
 uv tool install fileup
 pipx install fileup
 ```
+<!-- SECTION:installation:END -->
 
+<!-- SECTION:configuration:START -->
 ## Configuration
 
 Before you can start sharing your files, you'll need to create a configuration file at `~/.config/fileup/config.ini` with the following structure:
@@ -79,14 +100,19 @@ private_key =
 password =
 
 ```
+<!-- SECTION:configuration:END -->
 
+<!-- SECTION:ftp-config:START -->
 ### FTP Configuration
 For FTP uploads, you need to provide both `username` and `password` in the `[ftp]` section.
+<!-- SECTION:ftp-config:END -->
 
+<!-- SECTION:scp-config:START -->
 ### SCP Configuration
 For SCP uploads, you have two options:
 1. Use your SSH config by setting `protocol = scp` and using a hostname from your `~/.ssh/config`
 2. Explicitly configure SCP by providing `username` and optionally `private_key` in the `[scp]` section
+<!-- SECTION:scp-config:END -->
 
 ## Usage
 
@@ -147,22 +173,36 @@ options:
 
 <!-- OUTPUT:END -->
 
+<!-- SECTION:special-features:START -->
 ### Special Features
 
 - **Jupyter Notebooks**: If you're uploading a Jupyter notebook (`.ipynb`), the returned URL will be accessible via [nbviewer.jupyter.org](http://nbviewer.jupyter.org)
 - **Automatic Deletion**: Files with expiration times are automatically removed when their time is up
 - **URL Copying**: On macOS, the URL is automatically copied to your clipboard
+<!-- SECTION:special-features:END -->
 
+<!-- SECTION:macos:START -->
 ## macOS Integration
 
 `fileup` currently supports the `pbcopy` command, so the URL will be automatically copied to your clipboard on macOS systems.
+<!-- SECTION:macos:END -->
 
+<!-- SECTION:limitations:START -->
 ## Limitations
 
 - The automatic clipboard copying feature is only available for macOS users
 - FTP passwords are stored in plain text; use with caution
 - SCP implementation requires the `ssh` and `scp` commands to be available
+<!-- SECTION:limitations:END -->
 
-* * *
+<!-- SECTION:support:START -->
+## Support
+
+We appreciate your feedback and contributions! If you encounter any issues or have suggestions for improvements, please file an issue on the [GitHub repository](https://github.com/basnijholt/fileup/issues). We also welcome pull requests for bug fixes or new features.
+
+Happy sharing! :rocket:
+<!-- SECTION:support:END -->
+
+---
 
 Give `fileup` a try today and experience the convenience of effortless file sharing right from your command-line!
