@@ -21,6 +21,7 @@ You can set a time limit after which the file will be automatically removed, ens
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [Features](#features)
+- [Why fileup?](#why-fileup)
 - [Installation](#installation)
 - [Configuration](#configuration)
   - [FTP Configuration](#ftp-configuration)
@@ -29,6 +30,7 @@ You can set a time limit after which the file will be automatically removed, ens
   - [Special Features](#special-features)
 - [macOS Integration](#macos-integration)
 - [Limitations](#limitations)
+- [Support](#support)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
