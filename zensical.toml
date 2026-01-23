@@ -11,6 +11,7 @@ copyright = "Copyright &copy; 2024-2026 Bas Nijholt"
 repo_url = "https://github.com/basnijholt/fileup"
 repo_name = "GitHub"
 edit_uri = "edit/main/docs"
+logo = "assets/logo.svg"
 
 nav = [
   { "Home" = "index.md" },
