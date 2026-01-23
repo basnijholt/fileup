@@ -6,7 +6,7 @@
 [![Documentation](https://img.shields.io/badge/docs-fileup.nijho.lt-blue)](https://fileup.nijho.lt)
 
 <!-- SECTION:intro:START -->
-<img src="https://raw.githubusercontent.com/basnijholt/fileup/main/.github/logo.svg" alt="fileup Logo" align="right" style="width: 150px;" />
+<img src="https://raw.githubusercontent.com/basnijholt/fileup/main/docs/assets/logo.svg" alt="fileup Logo" align="right" style="width: 150px;" />
 
 `fileup` is your go-to Python package for hassle-free uploading and sharing of files right from your command-line interface.
 You can set a time limit after which the file will be automatically removed, ensuring the security of your data.
