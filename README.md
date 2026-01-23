@@ -4,7 +4,7 @@
 [![Build Status](https://github.com/basnijholt/fileup/actions/workflows/pytest.yml/badge.svg)](https://github.com/basnijholt/fileup/actions/workflows/pytest.yml)
 [![CodeCov](https://codecov.io/gh/basnijholt/fileup/branch/main/graph/badge.svg)](https://codecov.io/gh/basnijholt/fileup)
 
-<img src="https://raw.githubusercontent.com/basnijholt/fileup/main/logo.svg" alt="fileup Logo" align="right" style="width: 150px;" />
+<img src="https://raw.githubusercontent.com/basnijholt/fileup/main/.github/logo.svg" alt="fileup Logo" align="right" style="width: 150px;" />
 
 `fileup` is your go-to Python package for hassle-free uploading and sharing of files right from your command-line interface! 🖥️
 You can set a time limit after which the file will be automatically removed, ensuring the security of your data. 🕒
