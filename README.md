@@ -18,14 +18,14 @@ You can set a time limit after which the file will be automatically removed, ens
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [✨ Features](#-features)
-- [:package: Installation](#package-installation)
-- [:memo: Configuration](#memo-configuration)
+- [Installation](#installation)
+- [Configuration](#configuration)
   - [FTP Configuration](#ftp-configuration)
   - [SCP Configuration](#scp-configuration)
-- [:video_game: Usage](#video_game-usage)
+- [Usage](#usage)
   - [Special Features](#special-features)
-- [:green_apple: macOS Integration](#green_apple-macos-integration)
-- [:warning: Limitations](#warning-limitations)
+- [macOS Integration](#macos-integration)
+- [Limitations](#limitations)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
