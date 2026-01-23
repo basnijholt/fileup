@@ -70,9 +70,6 @@ I frequently need to share files quickly with colleagues or friends. Whether it'
 
 <!-- OUTPUT:END -->
 
-[Get Started ->](getting-started.md){ .md-button .md-button--primary }
-[View Configuration ->](configuration.md){ .md-button }
-
 ## Support and Contributions
 
 <!-- CODE:START -->
