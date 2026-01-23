@@ -1,4 +1,4 @@
-# fileup - Effortless File Sharing for Command-Line Enthusiasts
+# fileup - Share files with a single command
 
 [![PyPI](https://img.shields.io/pypi/v/fileup.svg)](https://pypi.python.org/pypi/fileup)
 [![Build Status](https://github.com/basnijholt/fileup/actions/workflows/pytest.yml/badge.svg)](https://github.com/basnijholt/fileup/actions/workflows/pytest.yml)
