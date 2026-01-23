@@ -44,7 +44,7 @@ You can set a time limit after which the file will be automatically removed, ens
 - :zap: Simple config using `~/.config/fileup/config.ini`
 - :closed_lock_with_key: Supports SSH keys and password authentication
 - :feather: Zero dependencies - uses Python standard library
-- :scroll: Works as a single script or installed package
+- :scroll: Works as a [single script](https://github.com/basnijholt/fileup/blob/main/fileup.py) or installed package
 - :snake: Supports Python >=3.10
 <!-- SECTION:features:END -->
 
