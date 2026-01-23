@@ -68,8 +68,5 @@ ignore = [
 [tool.ruff.lint.mccabe]
 max-complexity = 18
 
-[tool.ruff.lint.pep8-naming]
-classmethod-decorators = ["classmethod", "pydantic.validator"]
-
 [tool.mypy]
 python_version = "3.10"
