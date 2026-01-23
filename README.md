@@ -29,7 +29,7 @@ You can set a time limit after which the file will be automatically removed, ens
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## ✨ Features
+## Features
 
 - 📤 Upload via FTP or SCP (using SSH config)
 - ⏰ Automatic file expiration and cleanup
