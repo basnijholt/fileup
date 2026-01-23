@@ -87,3 +87,7 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# Documentation build output
+site/
+docs/__pycache__/
