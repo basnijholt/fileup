@@ -59,7 +59,7 @@ mypy fileup.py
 Generate and build the documentation locally:
 
 ```bash
-uv run python docs/generate.py
+uv run markdown-code-runner docs/*.md README.md
 uv run zensical build
 ```
 
