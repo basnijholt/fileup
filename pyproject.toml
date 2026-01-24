@@ -22,7 +22,7 @@ test = ["pytest", "pre-commit", "coverage", "pytest-cov", "pytest-mock"]
 docs = [
     "zensical",
     "markdown-gfm-admonition",
-    "markdown-code-runner",
+    "markdown-code-runner>=2.7.0",
 ]
 
 [project.scripts]
