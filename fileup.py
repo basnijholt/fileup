@@ -297,7 +297,9 @@ def _clipboard_to_temp_file(filename: str | None = None) -> tuple[Path, str]:
     text_data = _read_clipboard_text()
     if text_data is not None:
         remote_filename = filename or f"clipboard-{timestamp}.txt"
-        with tempfile.NamedTemporaryFile("w", delete=False, suffix=".txt", encoding="utf-8") as tmp_file:
+        with tempfile.NamedTemporaryFile(
+            "w", delete=False, suffix=".txt", encoding="utf-8",
+        ) as tmp_file:
             tmp_file.write(text_data)
             return Path(tmp_file.name), remote_filename
 
@@ -452,10 +454,12 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    upload_source, upload_filename_override, temp_clipboard_file = _resolve_upload_source(
-        args.filename,
-        clipboard=args.clipboard,
-        parser=parser,
+    upload_source, upload_filename_override, temp_clipboard_file = (
+        _resolve_upload_source(
+            args.filename,
+            clipboard=args.clipboard,
+            parser=parser,
+        )
     )
 
     try:
