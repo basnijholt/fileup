@@ -23,12 +23,11 @@
             "rangeStrategy": "pin"
         },
         {
-            "matchManagers": [
-                "github-actions"
-            ],
             "matchUpdateTypes": [
+                "digest",
                 "minor",
-                "patch"
+                "patch",
+                "pin"
             ],
             "automerge": true
         }
