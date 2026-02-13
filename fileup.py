@@ -13,6 +13,7 @@ import datetime
 import ftplib
 import io
 import re
+import shutil
 import subprocess
 import tempfile
 from dataclasses import dataclass
@@ -238,16 +239,111 @@ def remove_old_files(uploader: FileUploader, today: datetime.date) -> None:
             uploader.delete_file(file_name + "_delete_on_" + date)
 
 
+def _run_clipboard_command(command: list[str]) -> bytes | None:
+    """Run a clipboard command and return its output bytes."""
+    if shutil.which(command[0]) is None:
+        return None
+
+    with contextlib.suppress(subprocess.SubprocessError, OSError):
+        result = subprocess.run(command, check=True, capture_output=True)  # noqa: S603
+        if result.stdout:
+            return result.stdout
+    return None
+
+
+def _read_clipboard_image() -> bytes | None:
+    """Read image bytes from clipboard, if available."""
+    commands = [
+        ["pngpaste"],  # macOS (from Homebrew)
+        ["wl-paste", "--type", "image/png"],  # Wayland
+        ["xclip", "-selection", "clipboard", "-t", "image/png", "-o"],  # X11
+    ]
+    for command in commands:
+        data = _run_clipboard_command(command)
+        if data is not None:
+            return data
+    return None
+
+
+def _read_clipboard_text() -> str | None:
+    """Read text from clipboard, if available."""
+    commands = [
+        ["pbpaste"],  # macOS
+        ["wl-paste", "--no-newline"],  # Wayland
+        ["xclip", "-selection", "clipboard", "-o"],  # X11
+        ["xsel", "--clipboard", "--output"],  # X11 alternative
+        ["powershell", "-NoProfile", "-Command", "Get-Clipboard -Raw"],  # Windows
+    ]
+    for command in commands:
+        data = _run_clipboard_command(command)
+        if data is None:
+            continue
+        with contextlib.suppress(UnicodeDecodeError):
+            return data.decode("utf-8")
+    return None
+
+
+def _clipboard_to_temp_file(filename: str | None = None) -> tuple[Path, str]:
+    """Write clipboard content to a temporary file and return temp path + remote filename."""
+    timestamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d-%H%M%S")
+
+    image_data = _read_clipboard_image()
+    if image_data is not None:
+        remote_filename = filename or f"clipboard-{timestamp}.png"
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmp_file:
+            tmp_file.write(image_data)
+            return Path(tmp_file.name), remote_filename
+
+    text_data = _read_clipboard_text()
+    if text_data is not None:
+        remote_filename = filename or f"clipboard-{timestamp}.txt"
+        with tempfile.NamedTemporaryFile("w", delete=False, suffix=".txt", encoding="utf-8") as tmp_file:
+            tmp_file.write(text_data)
+            return Path(tmp_file.name), remote_filename
+
+    msg = "Clipboard has no supported image/text content, or no clipboard command is available"
+    raise RuntimeError(msg)
+
+
+def _resolve_upload_source(
+    filename: str | None,
+    *,
+    clipboard: bool,
+    parser: argparse.ArgumentParser,
+) -> tuple[str | Path, str | None, Path | None]:
+    """Resolve upload source and optional remote filename override."""
+    if clipboard:
+        temp_path, remote_filename = _clipboard_to_temp_file(filename)
+        return temp_path, remote_filename, temp_path
+
+    if filename is None:
+        parser.error("filename is required unless --clipboard is used")
+    return filename, None, None
+
+
+def _copy_url_to_clipboard(url: str) -> None:
+    """Copy URL to clipboard when supported."""
+    # Put a URL into clipboard only works on OS X
+    with contextlib.suppress(Exception):
+        process = subprocess.Popen(
+            "pbcopy",  # noqa: S607
+            env={"LANG": "en_US.UTF-8"},
+            stdin=subprocess.PIPE,
+        )
+        process.communicate(url.encode("utf-8"))
+
+
 def fileup(
     filename: str | Path,
     *,
     time: float = 90.0,
     direct: bool = False,
     img: bool = False,
+    remote_filename: str | None = None,
 ) -> str:
     """Upload a file to a server and return the url."""
     path = Path(filename).resolve()
-    filename_base = path.name
+    filename_base = remote_filename if remote_filename is not None else path.name
     config = read_config()
 
     # Fix the filename to avoid filename character issues
@@ -333,7 +429,12 @@ def main() -> None:
         description="\n".join(DESCRIPTION),
         formatter_class=argparse.RawTextHelpFormatter,
     )
-    parser.add_argument("filename", type=str)
+    parser.add_argument(
+        "filename",
+        nargs="?",
+        type=str,
+        help="Local filename. With --clipboard this is an optional remote filename.",
+    )
     parser.add_argument(
         "-t",
         "--time",
@@ -343,18 +444,33 @@ def main() -> None:
     )
     parser.add_argument("-d", "--direct", action="store_true")
     parser.add_argument("-i", "--img", action="store_true")
+    parser.add_argument(
+        "-c",
+        "--clipboard",
+        action="store_true",
+        help="Upload clipboard content (image preferred, then text).",
+    )
     args = parser.parse_args()
 
-    url = fileup(args.filename, time=args.time, direct=args.direct, img=args.img)
+    upload_source, upload_filename_override, temp_clipboard_file = _resolve_upload_source(
+        args.filename,
+        clipboard=args.clipboard,
+        parser=parser,
+    )
 
-    # Put a URL into clipboard only works on OS X
-    with contextlib.suppress(Exception):
-        process = subprocess.Popen(
-            "pbcopy",  # noqa: S607
-            env={"LANG": "en_US.UTF-8"},
-            stdin=subprocess.PIPE,
+    try:
+        url = fileup(
+            upload_source,
+            time=args.time,
+            direct=args.direct,
+            img=args.img,
+            remote_filename=upload_filename_override,
         )
-        process.communicate(url.encode("utf-8"))
+    finally:
+        if temp_clipboard_file is not None:
+            temp_clipboard_file.unlink(missing_ok=True)
+
+    _copy_url_to_clipboard(url)
 
     print("Your url is:", url)
 

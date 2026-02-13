@@ -414,4 +414,75 @@ def test_main_with_all_options(
         time=30,
         direct=True,
         img=True,
+        remote_filename=None,
     )
+
+
+def test_clipboard_to_temp_file_image(
+    mocker: pytest_mock.plugin.MockerFixture,
+) -> None:
+    """Test clipboard image content gets written to a temporary PNG."""
+    mocker.patch("fileup._read_clipboard_image", return_value=b"png-bytes")
+    mocker.patch("fileup._read_clipboard_text", return_value=None)
+
+    temp_path, remote_filename = fileup._clipboard_to_temp_file()
+    try:
+        assert temp_path.exists()
+        assert temp_path.suffix == ".png"
+        assert temp_path.read_bytes() == b"png-bytes"
+        assert remote_filename.startswith("clipboard-")
+        assert remote_filename.endswith(".png")
+    finally:
+        temp_path.unlink(missing_ok=True)
+
+
+def test_clipboard_to_temp_file_text(
+    mocker: pytest_mock.plugin.MockerFixture,
+) -> None:
+    """Test clipboard text content gets written to a temporary TXT."""
+    mocker.patch("fileup._read_clipboard_image", return_value=None)
+    mocker.patch("fileup._read_clipboard_text", return_value="hello clipboard")
+
+    temp_path, remote_filename = fileup._clipboard_to_temp_file("note.txt")
+    try:
+        assert temp_path.exists()
+        assert temp_path.suffix == ".txt"
+        assert temp_path.read_text(encoding="utf-8") == "hello clipboard"
+        assert remote_filename == "note.txt"
+    finally:
+        temp_path.unlink(missing_ok=True)
+
+
+def test_clipboard_to_temp_file_no_supported_content(
+    mocker: pytest_mock.plugin.MockerFixture,
+) -> None:
+    """Test clipboard upload fails when no supported content exists."""
+    mocker.patch("fileup._read_clipboard_image", return_value=None)
+    mocker.patch("fileup._read_clipboard_text", return_value=None)
+
+    with pytest.raises(RuntimeError, match="Clipboard has no supported image/text content"):
+        fileup._clipboard_to_temp_file()
+
+
+def test_main_clipboard_upload(
+    mocker: pytest_mock.plugin.MockerFixture,
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    """Test main function uploads clipboard content."""
+    temp_file = tmp_path / "clip.png"
+    temp_file.write_bytes(b"png")
+    monkeypatch.setattr("sys.argv", ["fileup", "--clipboard", "shot.png"])
+    mocker.patch("fileup._clipboard_to_temp_file", return_value=(temp_file, "shot.png"))
+    mock_upload = mocker.patch("fileup.fileup", return_value="http://example.com/shot.png")
+
+    fileup.main()
+
+    mock_upload.assert_called_once_with(
+        temp_file,
+        time=90,
+        direct=False,
+        img=False,
+        remote_filename="shot.png",
+    )
+    assert not temp_file.exists()
