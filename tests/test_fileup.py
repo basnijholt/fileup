@@ -461,7 +461,8 @@ def test_clipboard_to_temp_file_no_supported_content(
     mocker.patch("fileup._read_clipboard_text", return_value=None)
 
     with pytest.raises(
-        RuntimeError, match="Clipboard has no supported image/text content",
+        RuntimeError,
+        match="Clipboard has no supported image/text content",
     ):
         fileup._clipboard_to_temp_file()
 
@@ -477,7 +478,8 @@ def test_main_clipboard_upload(
     monkeypatch.setattr("sys.argv", ["fileup", "--clipboard", "shot.png"])
     mocker.patch("fileup._clipboard_to_temp_file", return_value=(temp_file, "shot.png"))
     mock_upload = mocker.patch(
-        "fileup.fileup", return_value="http://example.com/shot.png",
+        "fileup.fileup",
+        return_value="http://example.com/shot.png",
     )
 
     fileup.main()

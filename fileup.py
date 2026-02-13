@@ -298,7 +298,10 @@ def _clipboard_to_temp_file(filename: str | None = None) -> tuple[Path, str]:
     if text_data is not None:
         remote_filename = filename or f"clipboard-{timestamp}.txt"
         with tempfile.NamedTemporaryFile(
-            "w", delete=False, suffix=".txt", encoding="utf-8",
+            "w",
+            delete=False,
+            suffix=".txt",
+            encoding="utf-8",
         ) as tmp_file:
             tmp_file.write(text_data)
             return Path(tmp_file.name), remote_filename
